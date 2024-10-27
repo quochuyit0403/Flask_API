@@ -32,7 +32,7 @@ class User(db.Model):
     # Thiet lap moi quan he 1-n
     tasks = db.relationship('Task', backref='user', lazy=True)
     comments = db.relationship('Comment', backref='user', lazy=True)
-    categories = db.relationship('Category', backref='user', lazy=True)
+    projects = db.relationship('Project', backref='user', lazy=True)
     notifications = db.relationship('Notification', backref='user', lazy=True)
     
 class Notification(db.Model):
@@ -47,6 +47,7 @@ class Task(db.Model):
     __tablename__ = 'tasks'
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    project_id = db.Column(db.Integer, db.ForeignKey('projects.id'), nullable=False)
     title = db.Column(db.String(200), nullable=False)
     description = db.Column(db.String(200), nullable=False)
     status = db.Column(db.Enum(TaskStatus), nullable=False, default=TaskStatus.TOTO)
@@ -57,21 +58,19 @@ class Task(db.Model):
     # Thiet lap moi quan he 1-n
     attachments = db.relationship('Attachment', backref='task', lazy=True)
     comments = db.relationship('Comment', backref='task', lazy=True)
-    tasks_cagetories = db.relationship('Task_Category', backref='task', lazy=True)
 
-class Category(db.Model):
-    __tablename__ = 'categories'
+class Project(db.Model):
+    __tablename__ = 'projects'
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     name = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.String(200), nullable=False)
+    created_at = db.Column(db.Date, nullable=False)
+    updated_at = db.Column(db.Date, nullable=False)
 
     # Thiet lap moi quan he 1-n
-    tasks_cagetories = db.relationship('Task_Category', backref='category', lazy=True)
-
-class Task_Category(db.Model):
-    __tablename__ = 'task_categories'
-    task_id = db.Column(db.Integer, db.ForeignKey('tasks.id'),  primary_key=True)
-    category_id = db.Column(db.Integer, db.ForeignKey('categories.id'), primary_key=True)
+    tasks = db.relationship('Task', backref='project', lazy=True)
+    
 
 class Attachment(db.Model):
     __tablename__ = 'attachments'
@@ -87,5 +86,4 @@ class Comment(db.Model):
     task_id = db.Column(db.Integer, db.ForeignKey('tasks.id'), nullable=False)
     content = db.Column(db.String(200), nullable=False)
     create_at = db.Column(db.Date, nullable=False)
-
     

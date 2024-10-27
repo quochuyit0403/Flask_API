@@ -1,6 +1,6 @@
 # Định nghĩa các API endpoint (route) để trả về dữ liệu JSON.
 from flask import Blueprint, jsonify
-from .models import User, Task
+from .models import User, Task, Project
 from .extensions import db
 
 # Khởi tạo blueprint để định nghĩa các route cho API 
@@ -22,9 +22,24 @@ def get_users():
 def get_tasks():
     tasks = Task.query.all()
     task_list = [{
-        'id': task.id, 'title': task.title, 'user_id': task.user_id,
-        'description': task.description, 'priority': task.priority, 
-        'status': task.status, 'begin_day': task.begin_day, 
+        'id': task.id, 'title': task.title, 'user_id': task.user_id, 'project_id': task.project_id,
+        'description': task.description, 
+        'priority': task.priority.name if hasattr(task.priority, 'name') else task.priority, 
+        'status': task.status.name if hasattr(task.status, 'name') else task.status,
+        'begin_day': task.begin_day, 
         'due_day': task.due_day, 
     } for task in tasks]
     return jsonify(task_list)
+
+@api.route('/projects', methods=['GET'])
+def get_projects():
+    projects = Project.query.all()
+    project_list = [{
+        'id': project.id,
+        'user_id': project.user_id,
+        'name': project.name,
+        'description': project.description,
+        'created_at': project.created_at,
+        'updated_at': project.updated_at
+    } for project in projects]
+    return jsonify(project_list)
