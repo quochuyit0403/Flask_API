@@ -5,7 +5,7 @@ import enum
 
 # Định nghĩa enum cho 1 trạng thái task
 class TaskStatus(enum.Enum):
-    TOTO = 'todo',
+    TODO = 'todo'
     IN_PROGRESS = 'in_progress'
     COMPLETED = 'completed'
 
@@ -50,7 +50,7 @@ class Task(db.Model):
     project_id = db.Column(db.Integer, db.ForeignKey('projects.id'), nullable=False)
     title = db.Column(db.String(200), nullable=False)
     description = db.Column(db.String(200), nullable=False)
-    status = db.Column(db.Enum(TaskStatus), nullable=False, default=TaskStatus.TOTO)
+    status = db.Column(db.Enum(TaskStatus), nullable=False, default=TaskStatus.TODO)
     begin_day = db.Column(db.Date, nullable=False)
     due_day = db.Column(db.Date, nullable=False)
     priority = db.Column(db.Enum(TaskPriority), nullable=False, default=TaskPriority.MEDIUM)
