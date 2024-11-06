@@ -7,18 +7,8 @@ from datetime import datetime
 # Khởi tạo blueprint để định nghĩa các route cho API 
 api = Blueprint('api', __name__)
 
-@api.route('/users', methods=['GET'])
-def get_users():
-    users = User.query.all()
-    user_list = [{
-        'id': user.id, 'name': user.fullname, 'age': user.age,
-        'gender': user.gender, 'phone': user.phone, 'address': user.address,
-        'email': user.email, 'username': user.username, 'password': user.password,
-        'avatar': user.avatar, 'create_at': user.create_at          
-    } for user in users]
 
-    return jsonify(user_list)
-
+# Phần nhiệm vụ
 @api.route('/tasks', methods=['GET'])
 def get_tasks():
     tasks = Task.query.all()
@@ -108,10 +98,9 @@ def search_tasks():
         'project_id': task.project_id
     } for task in tasks]
     return jsonify(task_list)
-    
 
 
-
+# Phần projects
 @api.route('/projects', methods=['GET'])
 def get_projects():
     projects = Project.query.all()
@@ -124,3 +113,113 @@ def get_projects():
         'updated_at': project.updated_at
     } for project in projects]
     return jsonify(project_list)
+
+    
+
+
+# Phần users
+@api.route('/users', methods=['GET'])
+def get_users():
+    users = User.query.all()
+    user_list = [{
+        'id': user.id, 'fullname': user.fullname, 'age': user.age,
+        'gender': user.gender, 'phone': user.phone, 'address': user.address,
+        'email': user.email, 'username': user.username, 'password': user.password,
+        'avatar': user.avatar, 'create_at': user.create_at          
+    } for user in users]
+
+    return jsonify(user_list)
+
+@api.route('/users', methods=['POST'])
+def addUsers():
+    data = request.get_json()
+
+    try:
+
+        new_user = User(
+            fullname = data['fullname'],
+            age = data['age'],
+            gender = data['gender'],
+            phone = data['phone'],
+            address = data['address'],
+            email = data['email'],
+            username = data['username'],
+            password = data['password'],
+            avatar = data['avatar'],
+            create_at = data['create_at'],
+        )
+
+        db.session.add(new_user)
+        db.session.commit()
+
+        return jsonify({"message": "User added successfully"}), 201
+    
+    except KeyError as e:
+        return jsonify({"error": f"Key error: {str(e)}"}), 400
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+# Xóa users theo id   
+@api.route('/users/<int:id>', methods=['DELETE'])
+def deleteUser(id):
+    try:
+        user = User.query.get_or_404(id)
+        db.session.delete(user)
+        db.session.commit()
+        return jsonify({'message': 'User deleted successfully'})
+
+    except KeyError as e:
+        return jsonify({"error": f"Key error: {str(e)}"}), 400
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+# Cap nhat user theo id
+@api.route('/users/<int:id>', methods=['PUT'])
+def updateUser(id):
+    try:
+        user = User.query.get_or_404(id)
+        data = request.get_json()
+        
+        user.fullname = data.get('fullname', user.fullname)
+        user.age = data.get('age', user.age)
+        user.address = data.get('address', user.address)
+        user.email = data.get('email', user.email)
+        user.gender = data.get('gender', user.gender)
+        user.avatar = data.get('avatar', user.avatar)
+        user.password = data.get('password', user.password)
+        user.phone = data.get('phone', user.phone)
+        user.username = data.get('username', user.username)
+        user.create_at = data.get('create_at', user.create_at)
+        db.session.commit()
+        return jsonify({"message": "User updated successfully"})
+
+    except KeyError as e:
+        return jsonify({"error": f"Key error: {str(e)}"}), 400
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+# Tim kiem bang ten:
+@api.route('/users/search', methods=['GET'])
+def searchUser():
+    name_query = request.args.get('fullname', '')
+    users = User.query.filter(User.fullname.ilike(f'%{name_query}%')).all()
+    user_list = [{
+        "address": user.address,
+        "age": user.age,
+        "avatar": user.avatar,
+        "create_at": user.create_at,
+        "email": user.email,
+        "fullname": user.fullname,
+        "gender": user.gender,
+        "id": user.id,
+        "password": user.password,
+        "phone": user.phone,
+        "username": user.username
+    } for user in users]
+    return jsonify(user_list)
+
+# Đó là kiểu viết code với list comprehension của vòng for:
+# numbers = [1, 2, 3, 4, 5]
+# squares = [x**2 for x in numbers]  # Tạo list các bình phương của từng số
+# print(squares)  # Kết quả: [1, 4, 9, 16, 25]
+
