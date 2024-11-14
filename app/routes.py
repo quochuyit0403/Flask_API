@@ -99,24 +99,7 @@ def search_tasks():
     } for task in tasks]
     return jsonify(task_list)
 
-
-# Phần projects
-@api.route('/projects', methods=['GET'])
-def get_projects():
-    projects = Project.query.all()
-    project_list = [{
-        'id': project.id,
-        'user_id': project.user_id,
-        'name': project.name,
-        'description': project.description,
-        'created_at': project.created_at,
-        'updated_at': project.updated_at
-    } for project in projects]
-    return jsonify(project_list)
-
     
-
-
 # Phần users
 @api.route('/users', methods=['GET'])
 def get_users():
@@ -133,7 +116,6 @@ def get_users():
 @api.route('/users', methods=['POST'])
 def addUsers():
     data = request.get_json()
-
     try:
 
         new_user = User(
@@ -223,3 +205,86 @@ def searchUser():
 # squares = [x**2 for x in numbers]  # Tạo list các bình phương của từng số
 # print(squares)  # Kết quả: [1, 4, 9, 16, 25]
 
+
+# Phần projects
+@api.route('/projects', methods=['GET'])
+def get_projects():
+    projects = Project.query.all()
+    project_list = [{
+        'id': project.id,
+        'user_id': project.user_id,
+        'name': project.name,
+        'description': project.description,
+        'created_at': project.created_at,
+        'updated_at': project.updated_at
+    } for project in projects]
+    return jsonify(project_list)
+
+# Thêm mới 1 project
+@api.route('/projects', methods=['POST'])
+def add_project():
+    data = request.get_json()
+
+    try:
+        new_project = Project(
+            user_id=data['user_id'],
+            name=data['name'],
+            description=data['description'],
+            created_at=data['created_at'],
+            updated_at=data['updated_at'],
+        )
+
+        db.session.add(new_project)
+        db.session.commit()
+
+        return jsonify({"message": "Project added successfully"}), 201
+
+    except KeyError as e:
+        return jsonify({"error": f"Key error: {str(e)}"}), 400
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+# Xóa project theo ID
+@api.route('/projects/<int:id>', methods=['DELETE'])
+def delete_project(id):
+    try:
+        project = Project.query.get_or_404(id)
+        db.session.delete(project)
+        db.session.commit()
+        return jsonify({'message': "Project deleted successfully"})
+    except KeyError as e:
+        return jsonify({"error": f"Key error: {str(e)}"}), 400
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+# Cập nhật project = id
+@api.route('/projects/<int:id>', methods=['PUT'])
+def update_project(id):
+    try:
+        project = Project.query.get_or_404(id)
+        data = request.get_json()
+        project.name = data.get('name', project.name)
+        project.description = data.get('description', project.description)
+        project.created_at = datetime.strptime(data['created_at'], '%Y-%m-%d') if 'created_at' in data else project.created_at
+        project.updated_at = datetime.strptime(data['updated_at'], '%Y-%m-%d') if 'updated_at' in data else project.updated_at
+        db.session.commit()
+        return jsonify({"message": "Project updated successfully"})
+    except KeyError as e:
+        return jsonify({"error": f"Key error: {str(e)}"}), 400
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+# Tìm kiếm project = tiêu đề
+@api.route('/projects/search', methods=['GET'])
+def search_projects():
+    name_query = request.args.get('name', '')
+    projects = Project.query.filter(Project.name.ilike(f'%{name_query}%')).all()
+    project_list = [{
+        'id': project.id,
+        'user_id': project.user_id,
+        'name': project.name,
+        'description': project.description,
+        'created_at': project.created_at,
+        'updated_at': project.updated_at
+    } for project in projects]
+    return jsonify(project_list)
