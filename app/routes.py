@@ -9,18 +9,35 @@ api = Blueprint('api', __name__)
 
 
 # Phần nhiệm vụ
-@api.route('/tasks', methods=['GET'])
-def get_tasks():
-    tasks = Task.query.all()
+# @api.route('/tasks', methods=['GET'])
+# def get_tasks():
+#     tasks = Task.query.all()
+#     task_list = [{
+#         'id': task.id, 'title': task.title, 'user_id': task.user_id, 'project_id': task.project_id,
+#         'description': task.description, 
+#         'priority': task.priority.name if hasattr(task.priority, 'name') else task.priority, 
+#         'status': task.status.name if hasattr(task.status, 'name') else task.status,
+#         'begin_day': task.begin_day, 
+#         'due_day': task.due_day, 
+#     } for task in tasks]
+#     return jsonify(task_list)
+
+@api.route('/tasks/<int:user_id>', methods=['GET'])
+def get_tasks_by_user_id(user_id):
+    tasks = Task.query.filter_by(user_id=user_id).all()
     task_list = [{
-        'id': task.id, 'title': task.title, 'user_id': task.user_id, 'project_id': task.project_id,
-        'description': task.description, 
-        'priority': task.priority.name if hasattr(task.priority, 'name') else task.priority, 
+        'id': task.id,
+        'title': task.title,
+        'user_id': task.user_id,
+        'project_id': task.project_id,
+        'description': task.description,
+        'priority': task.priority.name if hasattr(task.priority, 'name') else task.priority,
         'status': task.status.name if hasattr(task.status, 'name') else task.status,
-        'begin_day': task.begin_day, 
-        'due_day': task.due_day, 
+        'begin_day': task.begin_day,
+        'due_day': task.due_day,
     } for task in tasks]
-    return jsonify(task_list)
+    return jsonify(task_list)   
+
 
 # Thêm mới 1 task
 @api.route('/tasks', methods=['POST'])
@@ -219,6 +236,20 @@ def get_projects():
         'updated_at': project.updated_at
     } for project in projects]
     return jsonify(project_list)
+
+@api.route('/projects/<int:user_id>', methods=['GET'])
+def get_projects_by_user_id(user_id):
+    projects = Project.query.filter_by(user_id=user_id).all()
+    project_list = [{
+        'id': project.id,
+        'user_id': project.user_id,
+        'name': project.name,
+        'description': project.description,
+        'created_at': project.created_at,
+        'updated_at': project.updated_at
+    } for project in projects]
+    return jsonify(project_list)
+
 
 # Thêm mới 1 project
 @api.route('/projects', methods=['POST'])
