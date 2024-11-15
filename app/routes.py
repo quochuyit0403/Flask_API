@@ -9,18 +9,18 @@ api = Blueprint('api', __name__)
 
 
 # Phần nhiệm vụ
-# @api.route('/tasks', methods=['GET'])
-# def get_tasks():
-#     tasks = Task.query.all()
-#     task_list = [{
-#         'id': task.id, 'title': task.title, 'user_id': task.user_id, 'project_id': task.project_id,
-#         'description': task.description, 
-#         'priority': task.priority.name if hasattr(task.priority, 'name') else task.priority, 
-#         'status': task.status.name if hasattr(task.status, 'name') else task.status,
-#         'begin_day': task.begin_day, 
-#         'due_day': task.due_day, 
-#     } for task in tasks]
-#     return jsonify(task_list)
+@api.route('/tasks', methods=['GET'])
+def get_tasks():
+    tasks = Task.query.all()
+    task_list = [{
+        'id': task.id, 'title': task.title, 'user_id': task.user_id, 'project_id': task.project_id,
+        'description': task.description, 
+        'priority': task.priority.name if hasattr(task.priority, 'name') else task.priority, 
+        'status': task.status.name if hasattr(task.status, 'name') else task.status,
+        'begin_day': task.begin_day, 
+        'due_day': task.due_day, 
+    } for task in tasks]
+    return jsonify(task_list)
 
 @api.route('/tasks/<int:user_id>', methods=['GET'])
 def get_tasks_by_user_id(user_id):
@@ -43,7 +43,6 @@ def get_tasks_by_user_id(user_id):
 @api.route('/tasks', methods=['POST'])
 def add_task():
     data = request.get_json()
-
     try:
         new_task = Task(
             user_id=data['user_id'],
@@ -99,21 +98,31 @@ def update_task(id):
         return jsonify({"error": str(e)}), 500
 
 # Tìm kiếm task = tiêu đề
-@api.route('/tasks/search', methods=['GET'])
-def search_tasks():
+@api.route('/tasks/search/<int:user_id>', methods=['GET'])
+def search_tasks(user_id):
+    # Lấy giá trị tìm kiếm từ query string
     title_query = request.args.get('title', '')
-    tasks = Task.query.filter(Task.title.ilike(f'%{title_query}%')).all()
+
+    # Lọc các task theo user_id và title_query
+    tasks = Task.query.filter(
+        Task.user_id == user_id,
+        Task.title.ilike(f'%{title_query}%')
+    ).all()
+
+    # Chuyển đổi kết quả truy vấn thành danh sách các dictionary
     task_list = [{
         'id': task.id,
         'title': task.title,
         'description': task.description,
-        'status': task.status.name,
-        'priority': task.priority.name,
+        'status': task.status.name if hasattr(task.status, 'name') else task.status,
+        'priority': task.priority.name if hasattr(task.priority, 'name') else task.priority,
         'begin_day': task.begin_day,
         'due_day': task.due_day,
         'user_id': task.user_id,
         'project_id': task.project_id
     } for task in tasks]
+
+    # Trả về kết quả dưới dạng JSON
     return jsonify(task_list)
 
     
@@ -306,10 +315,15 @@ def update_project(id):
         return jsonify({"error": str(e)}), 500
 
 # Tìm kiếm project = tiêu đề
-@api.route('/projects/search', methods=['GET'])
-def search_projects():
+@api.route('/projects/search/<int:user_id>', methods=['GET'])
+def search_projects(user_id):
     name_query = request.args.get('name', '')
-    projects = Project.query.filter(Project.name.ilike(f'%{name_query}%')).all()
+
+    projects = Project.query.filter(
+        Project.user_id == user_id,
+        Project.name.ilike(f'%{name_query}%')
+    ).all()
+
     project_list = [{
         'id': project.id,
         'user_id': project.user_id,
