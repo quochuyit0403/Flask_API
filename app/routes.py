@@ -134,10 +134,18 @@ def get_users():
         'id': user.id, 'fullname': user.fullname, 'age': user.age,
         'gender': user.gender, 'phone': user.phone, 'address': user.address,
         'email': user.email, 'username': user.username, 'password': user.password,
-        'avatar': user.avatar, 'create_at': user.create_at          
+        'avatar': user.avatar, 'create_at': user.create_at , 'isOnline': user.isOnline         
     } for user in users]
 
-    return jsonify(user_list)
+    # Đếm số lượng on, off
+    online_count = sum(1 for user in users if user.isOnline)
+    offline_count = len(users) - online_count
+
+    return jsonify({
+        'users': user_list,
+        'online_count': online_count,
+        'offline_count': offline_count
+    })
 
 @api.route('/users', methods=['POST'])
 def addUsers():
@@ -225,6 +233,19 @@ def searchUser():
         "username": user.username
     } for user in users]
     return jsonify(user_list)
+
+# isOnline
+@api.route('/users/<int:user_id>/status', methods=['PUT'])
+def update_user_status(user_id):
+    data = request.json
+    user = User.query.get(user_id)
+
+    if user:
+        user.isOnline = data.get('isOnline', False)
+        db.session.commit()
+        return jsonify({'message': 'Trạng thái người dùng đã được cập nhật!'}), 200
+
+    return jsonify({'message': 'Không tìm thấy người dùng!'}), 404
 
 # Đó là kiểu viết code với list comprehension của vòng for:
 # numbers = [1, 2, 3, 4, 5]
@@ -333,6 +354,8 @@ def search_projects(user_id):
         'updated_at': project.updated_at
     } for project in projects]
     return jsonify(project_list)
+
+
 
 # ==========SYSTEM INFO================
 @api.route('/system_info', methods=['GET'])

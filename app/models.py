@@ -29,6 +29,8 @@ class User(db.Model):
     avatar = db.Column(db.String(1000), nullable=False)
     create_at = db.Column(db.Date, nullable=False)
 
+    isOnline = db.Column(db.Boolean, default=False)  # Thêm thuộc tính mới để phục dụ server
+
     # Thiet lap moi quan he 1-n
     tasks = db.relationship('Task', backref='user', lazy=True)
     comments = db.relationship('Comment', backref='user', lazy=True)
