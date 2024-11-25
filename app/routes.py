@@ -1,10 +1,10 @@
 # Định nghĩa các API endpoint (route) để trả về dữ liệu JSON.
 from flask import Blueprint, jsonify, request
-from .models import User, Task, Project, TaskPriority, TaskStatus
+from .models import User, Task, Project, TaskPriority, TaskStatus, UserHost
 from .extensions import db
 from datetime import datetime
 from system_info import get_system_info
-# Khởi tạo blueprint để định nghĩa các route cho API 
+# Khởi tạo blueprint để định nghĩa các route cho API
 api = Blueprint('api', __name__)
 
 
@@ -14,13 +14,14 @@ def get_tasks():
     tasks = Task.query.all()
     task_list = [{
         'id': task.id, 'title': task.title, 'user_id': task.user_id, 'project_id': task.project_id,
-        'description': task.description, 
-        'priority': task.priority.name if hasattr(task.priority, 'name') else task.priority, 
+        'description': task.description,
+        'priority': task.priority.name if hasattr(task.priority, 'name') else task.priority,
         'status': task.status.name if hasattr(task.status, 'name') else task.status,
-        'begin_day': task.begin_day, 
-        'due_day': task.due_day, 
+        'begin_day': task.begin_day,
+        'due_day': task.due_day,
     } for task in tasks]
     return jsonify(task_list)
+
 
 @api.route('/tasks/<int:user_id>', methods=['GET'])
 def get_tasks_by_user_id(user_id):
@@ -36,7 +37,7 @@ def get_tasks_by_user_id(user_id):
         'begin_day': task.begin_day,
         'due_day': task.due_day,
     } for task in tasks]
-    return jsonify(task_list)   
+    return jsonify(task_list)
 
 
 # Thêm mới 1 task
@@ -49,10 +50,12 @@ def add_task():
             project_id=data['project_id'],
             title=data['title'],
             description=data['description'],
-            status=TaskStatus[data['status']],  # Chuyển chuỗi sang enum TaskStatus
+            # Chuyển chuỗi sang enum TaskStatus
+            status=TaskStatus[data['status']],
             begin_day=data['begin_day'],
             due_day=data['due_day'],
-            priority=TaskPriority[data['priority']]  # Chuyển chuỗi sang enum TaskPriority
+            # Chuyển chuỗi sang enum TaskPriority
+            priority=TaskPriority[data['priority']]
         )
 
         db.session.add(new_task)
@@ -66,6 +69,8 @@ def add_task():
         return jsonify({"error": str(e)}), 500
 
 # Xóa task theo ID
+
+
 @api.route('/tasks/<int:id>', methods=['DELETE'])
 def delete_task(id):
     try:
@@ -77,8 +82,10 @@ def delete_task(id):
         return jsonify({"error": f"Key error: {str(e)}"}), 400
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-    
+
 # Cập nhật task = id
+
+
 @api.route('/tasks/<int:id>', methods=['PUT'])
 def update_task(id):
     try:
@@ -86,10 +93,14 @@ def update_task(id):
         data = request.get_json()
         task.title = data.get('title', task.title)
         task.description = data.get('description', task.description)
-        task.status = TaskStatus[data['status'].upper()] if 'status' in data else task.status
-        task.priority = TaskPriority[data['priority'].upper()] if 'priority' in data else task.priority
-        task.begin_day = datetime.strptime(data['begin_day'], '%Y-%m-%d') if 'begin_day' in data else task.begin_day
-        task.due_day = datetime.strptime(data['due_day'], '%Y-%m-%d') if 'due_day' in data else task.due_day
+        task.status = TaskStatus[data['status'].upper(
+        )] if 'status' in data else task.status
+        task.priority = TaskPriority[data['priority'].upper(
+        )] if 'priority' in data else task.priority
+        task.begin_day = datetime.strptime(
+            data['begin_day'], '%Y-%m-%d') if 'begin_day' in data else task.begin_day
+        task.due_day = datetime.strptime(
+            data['due_day'], '%Y-%m-%d') if 'due_day' in data else task.due_day
         db.session.commit()
         return jsonify({"message": "Task updated successfully"})
     except KeyError as e:
@@ -98,6 +109,8 @@ def update_task(id):
         return jsonify({"error": str(e)}), 500
 
 # Tìm kiếm task = tiêu đề
+
+
 @api.route('/tasks/search/<int:user_id>', methods=['GET'])
 def search_tasks(user_id):
     # Lấy giá trị tìm kiếm từ query string
@@ -125,7 +138,7 @@ def search_tasks(user_id):
     # Trả về kết quả dưới dạng JSON
     return jsonify(task_list)
 
-    
+
 # Phần users
 @api.route('/users', methods=['GET'])
 def get_users():
@@ -134,7 +147,7 @@ def get_users():
         'id': user.id, 'fullname': user.fullname, 'age': user.age,
         'gender': user.gender, 'phone': user.phone, 'address': user.address,
         'email': user.email, 'username': user.username, 'password': user.password,
-        'avatar': user.avatar, 'create_at': user.create_at , 'isOnline': user.isOnline         
+        'avatar': user.avatar, 'create_at': user.create_at, 'isOnline': user.isOnline
     } for user in users]
 
     # Đếm số lượng on, off
@@ -147,35 +160,38 @@ def get_users():
         'offline_count': offline_count
     })
 
+
 @api.route('/users', methods=['POST'])
 def addUsers():
     data = request.get_json()
     try:
 
         new_user = User(
-            fullname = data['fullname'],
-            age = data['age'],
-            gender = data['gender'],
-            phone = data['phone'],
-            address = data['address'],
-            email = data['email'],
-            username = data['username'],
-            password = data['password'],
-            avatar = data['avatar'],
-            create_at = data['create_at'],
+            fullname=data['fullname'],
+            age=data['age'],
+            gender=data['gender'],
+            phone=data['phone'],
+            address=data['address'],
+            email=data['email'],
+            username=data['username'],
+            password=data['password'],
+            avatar=data['avatar'],
+            create_at=data['create_at'],
         )
 
         db.session.add(new_user)
         db.session.commit()
 
         return jsonify({"message": "User added successfully"}), 201
-    
+
     except KeyError as e:
         return jsonify({"error": f"Key error: {str(e)}"}), 400
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-# Xóa users theo id   
+# Xóa users theo id
+
+
 @api.route('/users/<int:id>', methods=['DELETE'])
 def deleteUser(id):
     try:
@@ -188,14 +204,16 @@ def deleteUser(id):
         return jsonify({"error": f"Key error: {str(e)}"}), 400
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-    
+
 # Cap nhat user theo id
+
+
 @api.route('/users/<int:id>', methods=['PUT'])
 def updateUser(id):
     try:
         user = User.query.get_or_404(id)
         data = request.get_json()
-        
+
         user.fullname = data.get('fullname', user.fullname)
         user.age = data.get('age', user.age)
         user.address = data.get('address', user.address)
@@ -213,8 +231,10 @@ def updateUser(id):
         return jsonify({"error": f"Key error: {str(e)}"}), 400
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-    
+
 # Tim kiem bang ten:
+
+
 @api.route('/users/search', methods=['GET'])
 def searchUser():
     name_query = request.args.get('fullname', '')
@@ -235,6 +255,8 @@ def searchUser():
     return jsonify(user_list)
 
 # isOnline
+
+
 @api.route('/users/<int:user_id>/status', methods=['PUT'])
 def update_user_status(user_id):
     data = request.json
@@ -266,6 +288,7 @@ def get_projects():
         'updated_at': project.updated_at
     } for project in projects]
     return jsonify(project_list)
+
 
 @api.route('/projects/<int:user_id>', methods=['GET'])
 def get_projects_by_user_id(user_id):
@@ -306,6 +329,8 @@ def add_project():
         return jsonify({"error": str(e)}), 500
 
 # Xóa project theo ID
+
+
 @api.route('/projects/<int:id>', methods=['DELETE'])
 def delete_project(id):
     try:
@@ -317,8 +342,10 @@ def delete_project(id):
         return jsonify({"error": f"Key error: {str(e)}"}), 400
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-    
+
 # Cập nhật project = id
+
+
 @api.route('/projects/<int:id>', methods=['PUT'])
 def update_project(id):
     try:
@@ -326,8 +353,10 @@ def update_project(id):
         data = request.get_json()
         project.name = data.get('name', project.name)
         project.description = data.get('description', project.description)
-        project.created_at = datetime.strptime(data['created_at'], '%Y-%m-%d') if 'created_at' in data else project.created_at
-        project.updated_at = datetime.strptime(data['updated_at'], '%Y-%m-%d') if 'updated_at' in data else project.updated_at
+        project.created_at = datetime.strptime(
+            data['created_at'], '%Y-%m-%d') if 'created_at' in data else project.created_at
+        project.updated_at = datetime.strptime(
+            data['updated_at'], '%Y-%m-%d') if 'updated_at' in data else project.updated_at
         db.session.commit()
         return jsonify({"message": "Project updated successfully"})
     except KeyError as e:
@@ -336,6 +365,8 @@ def update_project(id):
         return jsonify({"error": str(e)}), 500
 
 # Tìm kiếm project = tiêu đề
+
+
 @api.route('/projects/search/<int:user_id>', methods=['GET'])
 def search_projects(user_id):
     name_query = request.args.get('name', '')
@@ -356,9 +387,81 @@ def search_projects(user_id):
     return jsonify(project_list)
 
 
-
 # ==========SYSTEM INFO================
 @api.route('/system_info', methods=['GET'])
 def system_info():
     info = get_system_info()
     return jsonify(info)
+
+# ==========USER HOST================
+@api.route('/user_host', methods=['GET'])
+def get_all_host():
+    hosts = UserHost.query.all()
+    host_list = [{
+        'id': h.id,
+        'client_ip': h.client_ip,
+        'success': h.success,
+        'fail': h.fail,
+    } for h in hosts]
+    return jsonify(host_list)
+
+@api.route('/user_host/<string:client_ip>', methods=['GET'])
+def get_host_by_ip(client_ip):
+    host = UserHost.query.filter_by(client_ip=client_ip).first()
+    user_host_data = {
+        'id': host.id,
+        'client_ip': host.client_ip,
+        'success': host.success,
+        'fail': host.fail,
+    }
+    return jsonify(user_host_data)
+
+
+@api.route('/user_host', methods=['POST'])
+def add_host():
+    data = request.get_json()
+
+    try:
+        # Kiểm tra xem host đã tồn tại chưa
+        existing_host = UserHost.query.filter_by(
+            client_ip=data['client_ip']).first()
+        if existing_host:
+            # Nếu đã tồn tại, chỉ cần cập nhật
+            existing_host.success = data.get('success', 0)
+            existing_host.fail = data.get('fail', 0)
+            db.session.commit()
+            return jsonify({"message": "Host updated successfully"}), 200
+
+        # Nếu chưa tồn tại, thêm mới
+        new_host = UserHost(
+            client_ip=data['client_ip'],
+            success=data.get('success', 0),  # Mặc định là 0 nếu không có
+            fail=data.get('fail', 0),
+        )
+
+        db.session.add(new_host)
+        db.session.commit()
+
+        return jsonify({"message": "host added successfully"}), 201
+
+    except KeyError as e:
+        return jsonify({"error": f"Key error: {str(e)}"}), 400
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@api.route('/user_host/<string:client_ip>/status', methods=['PUT'])
+def update_request(client_ip):
+    data = request.json
+    host = UserHost.query.filter_by(client_ip=client_ip).first()
+    print(host)
+    if host:
+        if data.get('isSuccess'):
+            host.success += 1
+            db.session.commit()
+        else:
+            host.fail += 1
+            db.session.commit()
+        return jsonify({'message': 'User Host updated!'}), 200
+
+    return jsonify({'message': 'Không tìm thấy người dùng!'}), 404

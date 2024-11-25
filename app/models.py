@@ -37,6 +37,15 @@ class User(db.Model):
     projects = db.relationship('Project', backref='user', lazy=True)
     notifications = db.relationship('Notification', backref='user', lazy=True)
     
+# Mô hình UserHost giả định
+class UserHost(db.Model):
+    __tablename__ = 'user_host'
+
+    id = db.Column(db.Integer, primary_key=True)
+    client_ip = db.Column(db.String(45), unique=True, nullable=False)
+    success = db.Column(db.Integer, default=0, nullable=False)
+    fail = db.Column(db.Integer, default=0, nullable=False)
+
 class Notification(db.Model):
     __tablename__ = 'notifications'
     id = db.Column(db.Integer, primary_key=True)
