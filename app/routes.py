@@ -9,7 +9,7 @@ api = Blueprint('api', __name__)
 
 
 # Phần nhiệm vụ
-@api.route('/', methods=['GET'])
+@api.route('/tasks', methods=['GET'])
 def get_tasks():
     tasks = Task.query.all()
     task_list = [{

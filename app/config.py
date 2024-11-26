@@ -1,7 +1,7 @@
-# Cấu hình cho ứng dụng, bao gồm thông tin kết nối tới MySQL.
 import os
 
 class Config:
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL', 'mysql+mysqlconnector://root:@localhost/flask_api')
+    # Cấu hình SQLite cho Heroku
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL', 'sqlite:///database.db')  # Lấy từ môi trường Heroku
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SECRET_KEY = "levanquochuyphanbaokhangdeptraivaio"
+    SECRET_KEY = os.urandom(24)
