@@ -3,17 +3,19 @@
 from flask import Flask
 from .extensions import db
 from .routes import api
+import os
 
 def create_app():
     app = Flask(__name__)
 
-    # Doc cau hinh tu config.py, trong đó có cấu hình connect db
-    app.config.from_object('app.config.Config')
+    # Cấu hình cơ sở dữ liệu, sử dụng PostgreSQL nếu có, nếu không thì dùng SQLite
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///database.db')
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     # Khoi tao SQLAlchemy
     db.init_app(app)
 
-    # Dang ki blueprint cho cac route
+    # Đăng ký blueprint cho các route
     app.register_blueprint(api)
 
     with app.app_context():
