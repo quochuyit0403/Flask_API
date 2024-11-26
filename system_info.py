@@ -21,3 +21,5 @@ def get_system_info():
         "used_disk": used_disk,
         "disk_usage_percent": disk_usage_percent
     }
+
+
