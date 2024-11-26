@@ -45,6 +45,10 @@ def get_tasks_by_user_id(user_id):
 def add_task():
     data = request.get_json()
     try:
+        # Chuyển đổi chuỗi sang datetime.date
+        begin_day = datetime.strptime(data['begin_day'], '%a, %d %b %Y %H:%M:%S GMT').date()
+        due_day = datetime.strptime(data['due_day'], '%a, %d %b %Y %H:%M:%S GMT').date()
+        
         new_task = Task(
             user_id=data['user_id'],
             project_id=data['project_id'],
@@ -52,8 +56,8 @@ def add_task():
             description=data['description'],
             # Chuyển chuỗi sang enum TaskStatus
             status=TaskStatus[data['status']],
-            begin_day=data['begin_day'],
-            due_day=data['due_day'],
+            begin_day=begin_day,
+            due_day=due_day,
             # Chuyển chuỗi sang enum TaskPriority
             priority=TaskPriority[data['priority']]
         )
@@ -165,7 +169,7 @@ def get_users():
 def addUsers():
     data = request.get_json()
     try:
-
+        create_at = datetime.strptime(data['create_at'], '%a, %d %b %Y %H:%M:%S GMT').date()
         new_user = User(
             fullname=data['fullname'],
             age=data['age'],
@@ -176,7 +180,7 @@ def addUsers():
             username=data['username'],
             password=data['password'],
             avatar=data['avatar'],
-            create_at=data['create_at'],
+            create_at=create_at,
         )
 
         db.session.add(new_user)
@@ -310,12 +314,15 @@ def add_project():
     data = request.get_json()
 
     try:
+        created_at = datetime.strptime(data['created_at'], '%a, %d %b %Y %H:%M:%S GMT').date()
+        updated_at = datetime.strptime(data['updated_at'], '%a, %d %b %Y %H:%M:%S GMT').date()
+
         new_project = Project(
             user_id=data['user_id'],
             name=data['name'],
             description=data['description'],
-            created_at=data['created_at'],
-            updated_at=data['updated_at'],
+            created_at=created_at,
+            updated_at=updated_at,
         )
 
         db.session.add(new_project)

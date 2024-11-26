@@ -17,6 +17,7 @@ class TaskPriority(enum.Enum):
 
 class User(db.Model):
     __tablename__ = 'users'
+
     id = db.Column(db.Integer, primary_key=True)
     fullname = db.Column(db.String(100), nullable=False)
     age = db.Column(db.Integer, nullable=False)
@@ -46,7 +47,8 @@ class UserHost(db.Model):
     success = db.Column(db.Integer, default=0, nullable=False)
     fail = db.Column(db.Integer, default=0, nullable=False)
     create_at = db.Column(db.Date, nullable=False)
-    
+    updated_at = db.Column(db.Date, nullable=False)
+
 
 class Notification(db.Model):
     __tablename__ = 'notifications'
