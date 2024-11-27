@@ -46,7 +46,7 @@ class UserHost(db.Model):
     client_ip = db.Column(db.String(45), unique=True, nullable=False)
     success = db.Column(db.Integer, default=0, nullable=False)
     fail = db.Column(db.Integer, default=0, nullable=False)
-    create_at = db.Column(db.Date, nullable=False)
+    created_at = db.Column(db.Date, nullable=False)
     updated_at = db.Column(db.Date, nullable=False)
 
 
