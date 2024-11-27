@@ -168,7 +168,6 @@ def get_users():
 @api.route('/users', methods=['POST'])
 def addUsers():
     data = request.get_json()
-    print(data)
     try:
         create_at = datetime.strptime(data['create_at'], '%a, %d %b %Y %H:%M:%S GMT').date()
         new_user = User(
