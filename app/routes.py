@@ -409,6 +409,8 @@ def get_all_host():
         'client_ip': h.client_ip,
         'success': h.success,
         'fail': h.fail,
+        'created_at': h.created_at,
+        'updated_at': h.updated_at
     } for h in hosts]
     return jsonify(host_list)
 
@@ -420,6 +422,8 @@ def get_host_by_ip(client_ip):
         'client_ip': host.client_ip,
         'success': host.success,
         'fail': host.fail,
+        'created_at': host.created_at,
+        'updated_at': host.updated_at
     }
     return jsonify(user_host_data)
 
