@@ -425,14 +425,18 @@ def get_host_by_ip(client_ip):
         'created_at': host.created_at,
         'updated_at': host.updated_at
     }
+    print(type(user_host_data['created_at']))
     return jsonify(user_host_data)
 
 
 @api.route('/user_host', methods=['POST'])
 def add_host():
     data = request.get_json()
-
+    
     try:
+        # Chuyển đổi chuỗi ngày/giờ sang kiểu date
+        created_at_date = datetime.strptime(data['created_at'], "%a, %d %b %Y %H:%M:%S %Z").date()
+        updated_at_date = datetime.strptime(data['updated_at'], "%a, %d %b %Y %H:%M:%S %Z").date()
         # Kiểm tra xem host đã tồn tại chưa
         existing_host = UserHost.query.filter_by(
             client_ip=data['client_ip']).first()
@@ -440,8 +444,8 @@ def add_host():
             # Nếu đã tồn tại, chỉ cần cập nhật
             existing_host.success = data.get('success', 0)
             existing_host.fail = data.get('fail', 0)
-            existing_host.created_at = data.get('created_at', '')
-            existing_host.updated_at = data.get('updated_at', '')
+            existing_host.created_at = created_at_date
+            existing_host.updated_at = updated_at_date
             db.session.commit()
             return jsonify({"message": "Host updated successfully"}), 200
 
@@ -450,8 +454,8 @@ def add_host():
             client_ip=data['client_ip'],
             success=data.get('success', 0),  # Mặc định là 0 nếu không có
             fail=data.get('fail', 0),
-            created_at=data.get('created_at', ''),
-            updated_at=data.get('updated_at', '')
+            created_at=created_at_date,
+            updated_at=updated_at_date
         )
 
         db.session.add(new_host)
@@ -461,8 +465,13 @@ def add_host():
 
     except KeyError as e:
         return jsonify({"error": f"Key error: {str(e)}"}), 400
+        
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    finally:
+        print(type(created_at_date))
+        print(type(updated_at_date))
+        
 
 
 @api.route('/user_host/<string:client_ip>/status', methods=['PUT'])
