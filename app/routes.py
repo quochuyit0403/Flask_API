@@ -425,17 +425,18 @@ def get_host_by_ip(client_ip):
         'created_at': host.created_at,
         'updated_at': host.updated_at
     }
+    print(type(user_host_data['created_at']))
     return jsonify(user_host_data)
 
 
 @api.route('/user_host', methods=['POST'])
 def add_host():
     data = request.get_json()
-    # Chuyển đổi chuỗi ngày/giờ sang kiểu date
-    created_at_date = datetime.strptime(data['created_at'], "%a, %d %b %Y %H:%M:%S %Z").date()
-    updated_at_date = datetime.strptime(data['updated_at'], "%a, %d %b %Y %H:%M:%S %Z").date()
     
     try:
+        # Chuyển đổi chuỗi ngày/giờ sang kiểu date
+        created_at_date = datetime.strptime(data['created_at'], "%a, %d %b %Y %H:%M:%S %Z").date()
+        updated_at_date = datetime.strptime(data['updated_at'], "%a, %d %b %Y %H:%M:%S %Z").date()
         # Kiểm tra xem host đã tồn tại chưa
         existing_host = UserHost.query.filter_by(
             client_ip=data['client_ip']).first()
