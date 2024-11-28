@@ -314,6 +314,7 @@ def get_projects_by_user_id(user_id):
 @api.route('/projects', methods=['POST'])
 def add_project():
     data = request.get_json()
+    print(f"Received data: {data}")
 
     try:
         created_at = datetime.strptime(data['created_at'], '%a, %d %b %Y %H:%M:%S GMT').date()
@@ -328,7 +329,9 @@ def add_project():
         )
 
         db.session.add(new_project)
+        print("Added project to session")
         db.session.commit()
+        print("Committed to database")
 
         return jsonify({"message": "Project added successfully"}), 201
 
