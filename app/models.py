@@ -71,7 +71,6 @@ class Task(db.Model):
     priority = db.Column(db.Enum(TaskPriority), nullable=False, default=TaskPriority.MEDIUM)
 
     # Thiet lap moi quan he 1-n
-    attachments = db.relationship('Attachment', backref='task', lazy=True)
     comments = db.relationship('Comment', backref='task', lazy=True)
 
 class Project(db.Model):
