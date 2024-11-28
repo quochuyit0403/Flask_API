@@ -3,7 +3,7 @@ from flask import Blueprint, jsonify, request
 from .models import User, Task, Project, TaskPriority, TaskStatus, UserHost
 from .extensions import db
 from datetime import datetime
-from system_info import get_system_info
+# from system_info import get_system_info
 # Khởi tạo blueprint để định nghĩa các route cho API
 api = Blueprint('api', __name__)
 
@@ -395,10 +395,10 @@ def search_projects(user_id):
 
 
 # ==========SYSTEM INFO================
-@api.route('/system_info', methods=['GET'])
-def system_info():
-    info = get_system_info()
-    return jsonify(info)
+# @api.route('/system_info', methods=['GET'])
+# def system_info():
+#     info = get_system_info()
+#     return jsonify(info)
 
 # ==========USER HOST================
 @api.route('/user_host', methods=['GET'])
