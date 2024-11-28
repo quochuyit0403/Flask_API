@@ -87,12 +87,12 @@ class Project(db.Model):
     tasks = db.relationship('Task', backref='project', lazy=True)
     
 
-class Attachment(db.Model):
-    __tablename__ = 'attachments'
-    id = db.Column(db.Integer, primary_key=True)
-    task_id = db.Column(db.Integer, db.ForeignKey('tasks.id'), nullable=False)
-    file_path = db.Column(db.String(1000), nullable=False)
-    create_at = db.Column(db.Date, nullable=False)
+# class Attachment(db.Model):
+#     __tablename__ = 'attachments'
+#     id = db.Column(db.Integer, primary_key=True)
+#     task_id = db.Column(db.Integer, db.ForeignKey('tasks.id'), nullable=False)
+#     file_path = db.Column(db.String(1000), nullable=False)
+#     create_at = db.Column(db.Date, nullable=False)
 
 class Comment(db.Model):
     __tablename__ = 'comments'
