@@ -8,6 +8,7 @@ from system_info import get_system_info
 api = Blueprint('api', __name__)
 
 
+
 # Phần nhiệm vụ
 @api.route('/', methods=['GET'])
 def get_tasks():
@@ -18,7 +19,7 @@ def get_tasks():
         'priority': task.priority.name if hasattr(task.priority, 'name') else task.priority,
         'status': task.status.name if hasattr(task.status, 'name') else task.status,
         'begin_day': task.begin_day,
-        'due_day': task.due_day,
+        'due_day': task.due_day
     } for task in tasks]
     return jsonify({
         'Tasks list': task_list
@@ -45,25 +46,25 @@ def get_tasks_by_user_id(user_id):
 # Thêm mới 1 task
 @api.route('/tasks', methods=['POST'])
 def add_task():
-    data = request.get_json()
+    data = request.form
+    
     try:
-        # Chuyển đổi chuỗi sang datetime.date
+        # Chuyển đổi chuỗi ngày tháng
         begin_day = datetime.strptime(data['begin_day'], '%a, %d %b %Y %H:%M:%S GMT').date()
         due_day = datetime.strptime(data['due_day'], '%a, %d %b %Y %H:%M:%S GMT').date()
         
+        # Tạo task mới
         new_task = Task(
             user_id=data['user_id'],
             project_id=data['project_id'],
             title=data['title'],
             description=data['description'],
-            # Chuyển chuỗi sang enum TaskStatus
             status=TaskStatus[data['status']],
             begin_day=begin_day,
             due_day=due_day,
-            # Chuyển chuỗi sang enum TaskPriority
             priority=TaskPriority[data['priority']]
         )
-
+        
         db.session.add(new_task)
         db.session.commit()
 
@@ -74,9 +75,11 @@ def add_task():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+
+
+
+
 # Xóa task theo ID
-
-
 @api.route('/tasks/<int:id>', methods=['DELETE'])
 def delete_task(id):
     try:
@@ -153,7 +156,8 @@ def get_users():
         'id': user.id, 'fullname': user.fullname, 'age': user.age,
         'gender': user.gender, 'phone': user.phone, 'address': user.address,
         'email': user.email, 'username': user.username, 'password': user.password,
-        'avatar': user.avatar, 'create_at': user.create_at, 'isOnline': user.isOnline
+        'avatar': user.avatar, 'create_at': user.create_at, 'isOnline': user.isOnline, 
+        'isActive': user.isActive
     } for user in users]
 
     # Đếm số lượng on, off
@@ -293,7 +297,9 @@ def get_projects():
         'created_at': project.created_at,
         'updated_at': project.updated_at
     } for project in projects]
-    return jsonify(project_list)
+    return jsonify(
+        {'Project List': project_list}
+    )
 
 
 @api.route('/projects/<int:user_id>', methods=['GET'])

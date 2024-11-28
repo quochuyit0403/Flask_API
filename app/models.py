@@ -31,6 +31,7 @@ class User(db.Model):
     create_at = db.Column(db.Date, nullable=False)
 
     isOnline = db.Column(db.Boolean, default=False)  # Thêm thuộc tính mới để phục dụ server
+    isActive = db.Column(db.Boolean, default=False)  # Thêm thuộc tính mới để phục dụ server
 
     # Thiet lap moi quan he 1-n
     tasks = db.relationship('Task', backref='user', lazy=True)
@@ -69,6 +70,7 @@ class Task(db.Model):
     begin_day = db.Column(db.Date, nullable=False)
     due_day = db.Column(db.Date, nullable=False)
     priority = db.Column(db.Enum(TaskPriority), nullable=False, default=TaskPriority.MEDIUM)
+    
 
     # Thiet lap moi quan he 1-n
     comments = db.relationship('Comment', backref='task', lazy=True)
