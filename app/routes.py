@@ -278,6 +278,24 @@ def update_user_status(user_id):
 # squares = [x**2 for x in numbers]  # Tạo list các bình phương của từng số
 # print(squares)  # Kết quả: [1, 4, 9, 16, 25]
 
+@api.route("/users/<int:user_id>/active", methods =['PUT'])
+def update_active_user(user_id):
+    user = User.query.get(user_id)
+
+    if user:
+        # Đổi trạng thái active
+        user.isActive = not user.isActive
+        db.session.commit()
+        return jsonify({
+            'message': 'Trạng thái người dùng đã được cập nhật!',
+            'user': {
+                'id': user.id,
+                'fullname': user.fullname,
+                'active': user.isActive
+            }
+        }), 200
+    
+    return jsonify({'message': 'Không tìm thấy người dùng!'}), 404
 
 # Phần projects
 @api.route('/projects', methods=['GET'])
