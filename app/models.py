@@ -31,6 +31,7 @@ class User(db.Model):
     create_at = db.Column(db.Date, nullable=False)
 
     isOnline = db.Column(db.Boolean, default=False)  # Thêm thuộc tính mới để phục dụ server
+    isActive = db.Column(db.Boolean, default=False)  # Thêm thuộc tính mới để phục dụ server
 
     # Thiet lap moi quan he 1-n
     tasks = db.relationship('Task', backref='user', lazy=True)
@@ -69,9 +70,9 @@ class Task(db.Model):
     begin_day = db.Column(db.Date, nullable=False)
     due_day = db.Column(db.Date, nullable=False)
     priority = db.Column(db.Enum(TaskPriority), nullable=False, default=TaskPriority.MEDIUM)
+    
 
     # Thiet lap moi quan he 1-n
-    attachments = db.relationship('Attachment', backref='task', lazy=True)
     comments = db.relationship('Comment', backref='task', lazy=True)
 
 class Project(db.Model):
@@ -85,14 +86,6 @@ class Project(db.Model):
 
     # Thiet lap moi quan he 1-n
     tasks = db.relationship('Task', backref='project', lazy=True)
-    
-
-class Attachment(db.Model):
-    __tablename__ = 'attachments'
-    id = db.Column(db.Integer, primary_key=True)
-    task_id = db.Column(db.Integer, db.ForeignKey('tasks.id'), nullable=False)
-    file_path = db.Column(db.String(1000), nullable=False)
-    create_at = db.Column(db.Date, nullable=False)
 
 class Comment(db.Model):
     __tablename__ = 'comments'

@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <title>Dleohr - Bootstrap Admin HTML Template</title>
+
+    <link rel="shortcut icon" href="templates/assets/img/favicon.png">
+
+    <link rel="stylesheet" href="templates/assets/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="templates/assets/plugins/fontawesome/css/fontawesome.min.css">
+    <link rel="stylesheet" href="templates/assets/plugins/fontawesome/css/all.min.css">
+
+    <link rel="stylesheet" href="templates/assets/css/style.css">
+    <!--[if lt IE 9]>
+			<script src="assets/js/html5shiv.min.js"></script>
+			<script src="assets/js/respond.min.js"></script>
+		<![endif]-->
+</head>
+
+<body>
+
+    <div class="main-wrapper">
+
+        <div class="header">
+
+            <div class="header-left">
+                <a href="{{route('dashboard')}}" class="logo">
+                    <img src="templates/assets/img/home.png" alt="Logo">
+                </a>
+                <a href="{{route('dashboard')}}" class="logo logo-small">
+                    <img src="templates/assets/img/home.png" alt="Logo" width="30" height="30">
+                </a>
+                <a href="javascript:void(0);" id="toggle_btn">
+                    <span class="bar-icon">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </span>
+                </a>
+            </div>
+
+
+
+
+            <div class="top-nav-search">
+                <form>
+                    <input type="text" class="form-control" placeholder="">
+                    <button class="btn" type="submit"><i class="fas fa-search"></i></button>
+                </form>
+            </div>
+
+
+            <a class="mobile_btn" id="mobile_btn">
+                <i class="fas fa-bars"></i>
+            </a>
+
+
+            <ul class="nav user-menu">
+
+                <li class="nav-item dropdown">
+                    <a href="#" class="dropdown-toggle nav-link pr-0" data-toggle="dropdown">
+                        <i data-feather="bell"></i> <span class="badge badge-pill"></span>
+                    </a>
+                    <div class="dropdown-menu notifications">
+                        <div class="topnav-dropdown-header">
+                            <span class="notification-title">Notifications</span>
+                            <a href="javascript:void(0)" class="clear-noti"> Clear All</a>
+                        </div>
+                        <div class="noti-content">
+                            <ul class="notification-list">
+                                <li class="notification-message">
+                                    <a href="{{route('activities')}}">
+                                        <div class="media">
+                                            <span class="avatar avatar-sm">
+                                                <img class="avatar-img rounded-circle" alt="" src="templates/assets/img/profiles/avatar-02.jpg">
+                                            </span>
+                                            <div class="media-body">
+                                                <p class="noti-details"><span class="noti-title">Brian Johnson</span> paid the invoice <span class="noti-title">#DF65485</span></p>
+                                                <p class="noti-time"><span class="notification-time">4 mins ago</span></p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="notification-message">
+                                    <a href="{{route('activities')}}">
+                                        <div class="media">
+                                            <span class="avatar avatar-sm">
+                                                <img class="avatar-img rounded-circle" alt="" src="templates/assets/img/profiles/avatar-03.jpg">
+                                            </span>
+                                            <div class="media-body">
+                                                <p class="noti-details"><span class="noti-title">Marie Canales</span> has accepted your estimate <span class="noti-title">#GTR458789</span></p>
+                                                <p class="noti-time"><span class="notification-time">6 mins ago</span></p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="notification-message">
+                                    <a href="{{route('activities')}}">
+                                        <div class="media">
+                                            <div class="avatar avatar-sm">
+                                                <span class="avatar-title rounded-circle bg-primary-light"><i class="far fa-user"></i></span>
+                                            </div>
+                                            <div class="media-body">
+                                                <p class="noti-details"><span class="noti-title">New user registered</span></p>
+                                                <p class="noti-time"><span class="notification-time">8 mins ago</span></p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="notification-message">
+                                    <a href="{{route('activities')}}">
+                                        <div class="media">
+                                            <span class="avatar avatar-sm">
+                                                <img class="avatar-img rounded-circle" alt="" src="templates/assets/img/profiles/avatar-04.jpg">
+                                            </span>
+                                            <div class="media-body">
+                                                <p class="noti-details"><span class="noti-title">Barbara Moore</span> declined the invoice <span class="noti-title">#RDW026896</span></p>
+                                                <p class="noti-time"><span class="notification-time">12 mins ago</span></p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="notification-message">
+                                    <a href="{{route('activities')}}">
+                                        <div class="media">
+                                            <div class="avatar avatar-sm">
+                                                <span class="avatar-title rounded-circle bg-info-light"><i class="far fa-comment"></i></span>
+                                            </div>
+                                            <div class="media-body">
+                                                <p class="noti-details"><span class="noti-title">You have received a new message</span></p>
+                                                <p class="noti-time"><span class="notification-time">2 days ago</span></p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="topnav-dropdown-footer">
+                            <a href="{{route('activities')}}">View all Notifications</a>
+                        </div>
+                    </div>
+                </li>
+
+
+                <li class="nav-item dropdown has-arrow main-drop">
+                    <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
+                        <span class="user-img">
+                        <img style="height: 43px; width: 43px; object-fit: cover;" id="userImage" src="templates/assets/img/neymar.jpg" class=" mr-1" alt="profile" />
+                            <span class="status online"></span>
+                        </span>
+                        <span id="userName"></span>
+                    </a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="{{route('login')}}"><i data-feather="log-out" class="mr-1"></i> Logout</a>
+                    </div>
+                </li>
+
+            </ul>
+            <div class="dropdown mobile-user-menu show">
+                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
+                <div class="dropdown-menu dropdown-menu-right ">
+                    <a class="dropdown-item" href="{{route('login')}}">Logout</a>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-inner slimscroll">
+                <div class="sidebar-contents">
+                    <div id="sidebar-menu" class="sidebar-menu">
+                        <div class="mobile-show">
+                            <div class="offcanvas-menu">
+                                <div class="user-info align-center bg-theme text-center">
+                                    <span class="lnr lnr-cross  text-white" id="mobile_btn_close">X</span>
+                                    <a href="javascript:void(0)" class="d-block menu-style text-white">
+                                        <div class="user-avatar d-inline-block mr-3">
+                                        <img id='userImage1' style="object-fit: cover; width: 100px; height: 100px; border-radius: 50%; border: 2px solid white;" src="templates/assets/img/profiles/avatar-18.jpg" alt="user avatar" class=" mr-1">
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="sidebar-input">
+                                <div class="top-nav-search">
+                                    <form>
+                                        <input type="text" class="form-control" placeholder="Search here">
+                                        <button class="btn" type="submit"><i class="fas fa-search"></i></button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <ul>
+                            <li>
+                                <a href="{{route('dashboard')}}"><img src="templates/assets/img/home.svg" alt="sidebar_img"> <span>Dashboard</span></a>
+                            </li>
+                            <li>
+                                <a href="{{route('employee')}}"><img src="templates/assets/img/employee.svg" alt="sidebar_img"><span> Employees</span></a>
+                            </li>
+                            <li>
+                                <a href="{{route('calendar')}}"><img src="templates/assets/img/calendar.svg" alt="sidebar_img"> <span>Calendar</span></a>
+                            </li>
+                            <li>
+                                <a href="{{route('salary')}}"><img src="templates/assets/img/review.svg" alt="sidebar_img"> <span>Salary</span></a>
+                            </li>
+                            <li>
+                                <a href="{{route('report_personal')}}"><img src="templates/assets/img/report.svg" alt="sidebar_img"><span>Report</span></a>
+                            </li>
+                            <li>
+                                <a href="{{route('manage')}}"><img src="templates/assets/img/manage.svg" alt="sidebar_img"> <span>Manage</span></a>
+                            </li>
+                            <li class="active">
+                                <a href="#"><img src="templates/assets/img/settings.svg" alt="sidebar_img"><span>Setting</span></a>
+                            </li>
+                        </ul>
+                        <ul class="logout">
+                            <li>
+                                <a href="{{route('login')}}"><img src="templates/assets/img/logout.svg" alt="sidebar_img"><span>Log out</span></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="page-wrapper">
+            <div class="content container-fluid">
+                <div class="row">
+                    <div class="col-xl-12 col-sm-12 col-12">
+                        <div class="breadcrumb-path mb-4">
+                            <ul class="breadcrumb">
+                                <li class="breadcrumb-item"><a href=" {{route('dashboard')}} "><img src="templates/assets/img/dash.png" class="mr-2" alt="breadcrumb" />Home</a>
+                                </li>
+                                <li class="breadcrumb-item active"> Settings</li>
+                            </ul>
+                            <h3>Settings</h3>
+                        </div>
+                    </div>
+                    <div class="col-xl-12 col-sm-12 col-12 mb-4">
+                        <div class="head-link-set">
+                            <ul>
+                                <li><a class="active" href="#">General</a></li>
+                                <li><a href="{{route('setting-timeoff')}}">Time Off</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-xl-12 col-sm-12 col-12 ">
+                        <div class="row">
+                            <div class="col-xl-6 col-sm-12 col-12">
+                                <div class="card ">
+                                    <div class="card-header">
+                                        <h2 class="card-titles" style="color: orangered;">Company Logo</h2>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="company-logo">
+                                            <form id="uploadLogoForm" enctype="multipart/form-data">
+                                                <label class="logo-upload" for="edit_img">
+                                                    <input type="file" id="edit_img" name="logo"/>
+                                                    <a><i data-feather="edit"></i></a>
+                                                </label>
+                                                <img style="height: 140px; width: 140px; border: 0.65px solid black; object-fit: contain; border-radius: 10px;" id="companyLogoPreview" src="{{ asset('uploads/logo/' . $company['logo']) }}" alt="logo" />
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-6 col-sm-12 col-12 ">
+                                <div class="card ">
+                                    <form id='companyForm'></form>
+                                        <div class="card-header">
+                                            <h2 class="card-titles" style="color: orange;">Company Information</h2>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-xl-12 col-sm-6 col-12 ">
+                                                    <div class="form-group">
+                                                        <label><b>Company Name</b></label>
+                                                        <input type="text" id="name" name="name" value="{{ $company['name'] }}">
+                                                    </div>
+                                                </div>
+                                                <div class="col-xl-12 col-sm-6 col-12 ">
+                                                    <div class="form-group">
+                                                        <label><b>Company Url</b></label>
+                                                        <input type="text" id="website" name="website" value="{{ $company['website'] }}">
+                                                    </div>
+                                                </div>
+                                                <div class="col-xl-12 col-sm-6 col-12 ">
+                                                    <div class="form-group">
+                                                        <label><b>Company Industry</b></label>
+                                                        <input type="text" id="industry" name="industry" value="{{ $company['industry'] }}">
+                                                    </div>
+                                                </div>
+                                                <div class="col-xl-12 col-sm-6 col-12 ">
+                                                    <div class="form-group">
+                                                        <label><b>Company CEO Name</b></label>
+                                                        <input type="text" id="ceo_name" name="ceo_name" value="{{ $company['ceo_name'] }}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-btn">
+                                                <button type="submit" class="btn btn-apply" id="updateCompanyBtn">Save Changes</button>
+                                            </div>
+                                        </div>
+                                    </form>    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        document.getElementById('updateCompanyBtn').addEventListener('click', function() {
+            let formData = {
+                name: document.getElementById('name').value,
+                website: document.getElementById('website').value,
+                industry: document.getElementById('industry').value,
+                ceo_name: document.getElementById('ceo_name').value
+            };
+
+            axios.put('http://127.0.0.1:8080/api/company', formData)
+                .then(response => {
+                    alert('Company updated successfully!');
+                    window.location.reload();
+                })
+                .catch(error => {
+                    if (error.response) {
+                        console.error('Error:', error.response.data);
+                        alert('Failed to update company. Please check the input.');
+                    }
+                });
+        });
+    </script>
+
+    <!-- Cap nhat anh avatar -->
+    <script>
+        document.getElementById('edit_img').addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                // Hàm này sẽ được chạy khi việc đọc file hoàn thành
+                reader.onload = function(e) {
+                    document.getElementById('companyLogoPreview').setAttribute('src', e.target.result);
+                }
+                // Đọc file dưới dạng URL
+                reader.readAsDataURL(file);
+            }
+
+            // Tự động submit form sau khi chọn file
+            uploadLogo();
+        });
+
+        function uploadLogo() {
+            // Tạo 1 cái đối tượng để lưu data r gửi đến server
+            let formData = new FormData();
+            let logoFile = document.getElementById('edit_img').files[0];
+            formData.append('logo', logoFile);
+
+            axios.post('http://127.0.0.1:8080/api/company/upload-logo', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+            .then(response => {
+                if (response.data.success) {
+                    document.getElementById('companyLogoPreview').setAttribute('src', response.data.logo_url);
+                    alert('Logo uploaded successfully!');
+                }
+            })
+            .catch(error => {
+                console.error('Error uploading logo:', error.response.data);
+                alert('Failed to upload logo. Please try again.');
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            fetchCompanyData();
+
+            function fetchCompanyData() {
+                axios.get('http://127.0.0.1:8080/api/company')
+                    .then(response => {
+                        if (response.data) {
+                            const company = response.data;
+
+                            // Hiển thị logo
+                            if (company.logo) {
+                                document.getElementById('companyLogoPreview').setAttribute('src', company.logo);
+                            } else {
+                                document.getElementById('companyLogoPreview').setAttribute('src', '/default-logo.png'); // Logo mặc định nếu không có logo
+                            }
+
+                            // Hiển thị các thông tin khác (nếu cần)
+                            // Ví dụ: document.getElementById('companyName').textContent = company.name;
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching company data:', error);
+                    });
+            }
+        });
+
+
+    </script>
+
+
+
+
+    <script src="templates/assets/js/jquery-3.6.0.min.js"></script>
+
+    <script src="templates/assets/js/popper.min.js"></script>
+    <script src="templates/assets/js/bootstrap.min.js"></script>
+
+    <script src="templates/assets/js/feather.min.js"></script>
+
+    <script src="templates/assets/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+    <script src="templates/assets/js/script.js"></script>
+</body>
+
+</html>
+
+<script>
+	document.addEventListener('DOMContentLoaded', function() {
+    const logoutLink = document.querySelector('ul.logout li a');
+
+    logoutLink.addEventListener('click', function(event) {
+        event.preventDefault(); // Ngăn chặn hành động mặc định của liên kết
+
+        if (confirm('Are you sure you want to log out?')) {
+            window.location.href = this.href; // Điều hướng tới trang đăng nhập nếu người dùng xác nhận
+        }
+    });
+});
+</script>
+
+<script>
+	document.addEventListener('DOMContentLoaded', function() {
+		// Lấy thông tin người dùng từ localStorage
+		const user = JSON.parse(localStorage.getItem('user'));
+		
+		if (user) {
+			// Hiển thị tên người dùng
+			document.getElementById('userName').textContent = user.name;
+			
+			// Hiển thị ảnh người dùng:
+			document.getElementById('userImage').src = user.avatar;
+            document.getElementById('userImage1').src = user.avatar;
+		} else {
+			// Xử lý khi không có thông tin người dùng
+			document.getElementById('userName').textContent = 'Guest'; // Hoặc để trống
+			document.getElementById('userImage').src = 'templates/assets/img/neymar.jpg'; // Đường dẫn ảnh mặc định
+		}
+	});
+</script>
