@@ -170,6 +170,31 @@ def get_users():
         'offline_count': offline_count
     })
 
+@api.route('/users/<int:id>', methods=['GET'])
+def get_user_by_id(id):
+    try:
+        # Truy vấn user theo ID
+        user = User.query.get_or_404(id)
+
+        # Trả về dữ liệu user dưới dạng JSON
+        return jsonify({
+            "id": user.id,
+            "fullname": user.fullname,
+            "username": user.username,
+            "email": user.email,
+            "phone": user.phone,
+            "address": user.address,
+            "avatar": user.avatar,
+            "age": user.age,
+            "gender": user.gender,
+            "create_at": user.create_at.strftime('%a, %d %b %Y %H:%M:%S GMT'),  # Định dạng lại ngày
+            "isActive": user.isActive,
+            "isOnline": user.isOnline,
+            "password":user.password
+        }), 200
+    except Exception as e:
+        # Xử lý lỗi nếu có
+        return jsonify({"error": str(e)}), 500
 
 @api.route('/users', methods=['POST'])
 def addUsers():
@@ -223,17 +248,18 @@ def updateUser(id):
     try:
         user = User.query.get_or_404(id)
         data = request.get_json()
-
+        create_at = datetime.strptime(data['create_at'], '%a, %d %b %Y %H:%M:%S GMT').date()
+        print(f"This is type of create_at user: {type(create_at)} {create_at}")
         user.fullname = data.get('fullname', user.fullname)
-        user.age = data.get('age', user.age)
+        user.username = data.get('username', user.username)
+        user.phone = data.get('phone', user.phone)
         user.address = data.get('address', user.address)
+        user.avatar = data.get('avatar', user.avatar)
+        user.age = data.get('age', user.age)
         user.email = data.get('email', user.email)
         user.gender = data.get('gender', user.gender)
-        user.avatar = data.get('avatar', user.avatar)
         user.password = data.get('password', user.password)
-        user.phone = data.get('phone', user.phone)
-        user.username = data.get('username', user.username)
-        user.create_at = data.get('create_at', user.create_at)
+        user.create_at = create_at
         db.session.commit()
         return jsonify({"message": "User updated successfully"})
 
