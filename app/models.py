@@ -28,7 +28,7 @@ class User(db.Model):
     username = db.Column(db.String(50), nullable=False)
     password = db.Column(db.String(50), nullable=False)
     avatar = db.Column(db.String(1000), nullable=False)
-    create_at = db.Column(db.Date, nullable=False)
+    create_at = db.Column(db.DateTime, nullable=False)
 
     isOnline = db.Column(db.Boolean, default=False)  # Thêm thuộc tính mới để phục dụ server
     isActive = db.Column(db.Boolean, default=True)  # Thêm thuộc tính mới để phục dụ server

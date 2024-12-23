@@ -3,11 +3,32 @@ from flask import Blueprint, jsonify, request
 from .models import User, Task, Project, TaskPriority, TaskStatus, UserHost
 from .extensions import db
 from datetime import datetime
+from pytz import timezone, UTC
+
 # from system_info import get_system_info
 # Khởi tạo blueprint để định nghĩa các route cho API
 api = Blueprint('api', __name__)
 
-
+def convert_gmt_to_vn_datetime(gmt_datetime_str):
+    """
+    Chuyển đổi một chuỗi ngày giờ định dạng GMT thành datetime theo múi giờ Việt Nam (UTC+7).
+    
+    Args:
+        gmt_datetime_str (str): Chuỗi ngày giờ theo định dạng '%a, %d %b %Y %H:%M:%S GMT'.
+        
+    Returns:
+        datetime: Đối tượng datetime theo múi giờ Việt Nam.
+    """
+    # Chuyển từ chuỗi sang datetime (GMT)
+    gmt_datetime = datetime.strptime(gmt_datetime_str, '%a, %d %b %Y %H:%M:%S GMT')
+    
+    # Định nghĩa múi giờ Việt Nam
+    vietnam_tz = timezone('Asia/Ho_Chi_Minh')
+    
+    # Chuyển sang múi giờ Việt Nam
+    vn_datetime = gmt_datetime.replace(tzinfo=UTC).astimezone(vietnam_tz)
+    
+    return vn_datetime
 
 # Phần nhiệm vụ
 @api.route('/', methods=['GET'])
@@ -50,9 +71,11 @@ def add_task():
     
     try:
         # Chuyển đổi chuỗi ngày tháng
-        begin_day = datetime.strptime(data['begin_day'], '%a, %d %b %Y %H:%M:%S GMT').date()
-        due_day = datetime.strptime(data['due_day'], '%a, %d %b %Y %H:%M:%S GMT').date()
-        
+        # begin_day = datetime.strptime(data['begin_day'], '%a, %d %b %Y %H:%M:%S GMT').date()
+        # due_day = datetime.strptime(data['due_day'], '%a, %d %b %Y %H:%M:%S GMT').date()
+        begin_day = convert_gmt_to_vn_datetime(data['begin_day'])
+        due_day = convert_gmt_to_vn_datetime(data['due_day'])
+
         # Tạo task mới
         new_task = Task(
             user_id=data['user_id'],
@@ -200,7 +223,14 @@ def get_user_by_id(id):
 def addUsers():
     data = request.get_json()
     try:
+        """ code lúc đầu
         create_at = datetime.strptime(data['create_at'], '%a, %d %b %Y %H:%M:%S GMT').date()
+        """
+
+        # code sau sửa
+        # create_at = convert_gmt_to_vn_datetime(data['create_at'])
+        create_at = datetime.strptime(data['create_at'], '%a, %d %b %Y %H:%M:%S %z')
+        # =====
         new_user = User(
             fullname=data['fullname'],
             age=data['age'],
