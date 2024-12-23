@@ -20,7 +20,7 @@ def convert_gmt_to_vn_datetime(gmt_datetime_str):
         datetime: Đối tượng datetime theo múi giờ Việt Nam.
     """
     # Chuyển từ chuỗi sang datetime (GMT)
-    gmt_datetime = datetime.strptime(gmt_datetime_str, '%a, %d %b %Y %H:%M:%S GMT')
+    gmt_datetime = datetime.strptime(gmt_datetime_str, '%a, %d %b %Y %H:%M:%S %z')
     
     # Định nghĩa múi giờ Việt Nam
     vietnam_tz = timezone('Asia/Ho_Chi_Minh')
@@ -228,8 +228,8 @@ def addUsers():
         """
 
         # code sau sửa
-        # create_at = convert_gmt_to_vn_datetime(data['create_at'])
-        create_at = datetime.strptime(data['create_at'], '%a, %d %b %Y %H:%M:%S %z')
+        create_at = convert_gmt_to_vn_datetime(data['create_at'])
+        # create_at = datetime.strptime(data['create_at'], '%a, %d %b %Y %H:%M:%S %z')
         # =====
         new_user = User(
             fullname=data['fullname'],
